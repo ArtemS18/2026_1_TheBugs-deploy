@@ -1,0 +1,42 @@
+
+
+services:
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/config/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/share:/usr/share/nginx/html
+    ports:
+      - 80:80
+    depends_on:
+      - frontend
+      - server
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${API_URL}
+    volumes:
+      - ./nginx/share:/app/dist
+    
+    
+  server:
+    container_name: server
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      SRV_HOST: 0.0.0.0
+      PG_HOST: postgres
+      PG_PORT: 5432
+
+    env_file:
+      - .env
+
+
+
+
