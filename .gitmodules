@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/go-park-mail-ru/2026_1_TheBugs.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/frontend-park-mail-ru/2026_1_the_bugs.git
