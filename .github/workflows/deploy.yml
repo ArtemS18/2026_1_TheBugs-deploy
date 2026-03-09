@@ -34,6 +34,7 @@ jobs:
                     git submodule update --recursive
                  fi
                  '"
+                 
             - name: Docker pull
               run: |
                 ssh -o StrictHostKeyChecking=accept-new "${{secrets.VPS_USERNAME}}@${{secrets.VPS_HOST}}" "sudo bash -lc '
