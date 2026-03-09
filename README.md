@@ -1,4 +1,4 @@
-#🐞Deploy-репозиторий комады The Bugs🐞
+##🐞Deploy-репозиторий комады The Bugs🐞
 
 ## [Ссылка на frontend](https://github.com/frontend-park-mail-ru/2026_1_the_bugs)
 ## [Ссылка на backend](https://github.com/go-park-mail-ru/2026_1_TheBugs)
