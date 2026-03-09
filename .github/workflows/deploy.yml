@@ -1,0 +1,43 @@
+name: Deploy on server
+
+on:
+    workflow_dispatch:
+    push:
+        branches: [ "main" ]
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+            - name: Setup SSH
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+               ssh-private-key: ${{secrets.VPS_PRIVATE_KEY}}
+            - name: Init github repo
+              run: | 
+                 ssh -o StrictHostKeyChecking=accept-new "${{secrets.VPS_USERNAME}}@${{secrets.VPS_HOST}}" "bash -lc '
+                 cd /home/${{ secrets.VPS_USERNAME }}/srv
+                 mkdir prod -p
+                 cd prod
+                 PROD_DIR="/home/${{ secrets.VPS_USERNAME }}/prod/srv"
+                
+                 if [ ! -d "/home/${{ secrets.VPS_USERNAME }}/prod/srv" ] || [ ! -d "/home/${{ secrets.VPS_USERNAME }}/prod/srv/.git" ]; then
+                    echo "Cloning fresh repo..."
+                    rm -rf ./* ./.[!.]*
+                    git clone https://github.com/ArtemS18/2026_1_TheBugs-deploy.git .
+                    git submodule update --init --recursive
+                 else
+                    echo "Pulling updates..."
+                    git pull origin main
+                    git submodule update --recursive
+                 fi
+                 '"
+            - name: Docker pull
+              run: |
+                ssh -o StrictHostKeyChecking=accept-new "${{secrets.VPS_USERNAME}}@${{secrets.VPS_HOST}}" "sudo bash -lc '
+                cd /home/${{ secrets.VPS_USERNAME }}/srv/prod
+                docker compose pull
+                docker compose up -d --build --remove-orphans
+                '"
