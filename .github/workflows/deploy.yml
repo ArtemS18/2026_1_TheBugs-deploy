@@ -18,12 +18,12 @@ jobs:
             - name: Init github repo
               run: | 
                  ssh -o StrictHostKeyChecking=accept-new "${{secrets.VPS_USERNAME}}@${{secrets.VPS_HOST}}" "bash -lc '
-                 cd /home/${{ secrets.VPS_USERNAME }}/srv
+                 cd /home/${{ secrets.VPS_USERNAME }}
                  mkdir prod -p
                  cd prod
-                 PROD_DIR="/home/${{ secrets.VPS_USERNAME }}/prod/srv"
+                 PROD_DIR="/home/${{ secrets.VPS_USERNAME }}/prod"
                 
-                 if [ ! -d "/home/${{ secrets.VPS_USERNAME }}/prod/srv" ] || [ ! -d "/home/${{ secrets.VPS_USERNAME }}/prod/srv/.git" ]; then
+                 if [ ! -d "/home/${{ secrets.VPS_USERNAME }}/prod" ] || [ ! -d "/home/${{ secrets.VPS_USERNAME }}/prod/.git" ]; then
                     echo "Cloning fresh repo..."
                     rm -rf ./* ./.[!.]*
                     git clone https://github.com/ArtemS18/2026_1_TheBugs-deploy.git .
@@ -37,7 +37,7 @@ jobs:
             - name: Docker pull
               run: |
                 ssh -o StrictHostKeyChecking=accept-new "${{secrets.VPS_USERNAME}}@${{secrets.VPS_HOST}}" "sudo bash -lc '
-                cd /home/${{ secrets.VPS_USERNAME }}/srv/prod
+                cd /home/${{ secrets.VPS_USERNAME }}/prod
                 docker compose pull
                 docker compose up -d --build --remove-orphans
                 '"
