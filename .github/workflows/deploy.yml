@@ -55,7 +55,7 @@ jobs:
               token: ${{ secrets.TG_API_KEY }}
               format: HTML  # вместо markdown
               message: |
-                ✅ <b>Success Deploy new Commit on server ${{ secrets.SERVER_HOST }}</b>
+                ✅ <b>Success Deploy new Commit on server ${{ secrets.VPS_HOST }}</b>
 
                 <code>branch:</code> ${{ github.ref_name }} 
                 <code>author:</code> ${{ github.event.pusher.name }}
