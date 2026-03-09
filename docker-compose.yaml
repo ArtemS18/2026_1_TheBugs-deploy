@@ -47,6 +47,7 @@ services:
     ports:
       - "8000:8000"
     environment:
+      APP_ENV: ${APP_ENV}
       SRV_HOST: 0.0.0.0
       PG_HOST: postgres
       PG_PORT: 5432
