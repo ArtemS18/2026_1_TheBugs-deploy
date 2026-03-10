@@ -24,7 +24,7 @@ services:
       - ./nginx/share:/usr/share/nginx/html
       - ./nginx/img:/var/www/media
       - ./nginx/certbot/www:/var/www/certbot
-      - ./nginx/certbot/conf:/etc/letsencryp
+      - ./nginx/certbot/conf:/etc/letsencrypt
     ports:
       - 80:80
       - 443:443 
