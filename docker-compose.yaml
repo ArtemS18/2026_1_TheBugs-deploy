@@ -54,6 +54,10 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
 
+    depends_on:
+      - postgres
+      - redis
+      
     env_file:
       - .env
 
