@@ -51,12 +51,24 @@ services:
       SRV_HOST: 0.0.0.0
       PG_HOST: postgres
       PG_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
 
     env_file:
       - .env
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
 volumes:
   postgres_data:
+  redis_data:
 
 
 
