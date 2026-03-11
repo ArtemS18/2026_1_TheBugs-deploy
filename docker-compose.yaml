@@ -79,7 +79,6 @@ services:
       - ./nginx/certbot/conf:/etc/letsencrypt
       - ./nginx/certbot/www:/var/www/certbot
     command: certonly --webroot -w /var/www/certbot --email rerttdtdf@gmail.com --agree-tos -d dom-deli.ru
-    restart: unless-stopped
 
 volumes:
   postgres_data:
