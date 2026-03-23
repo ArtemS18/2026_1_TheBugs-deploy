@@ -57,6 +57,7 @@ services:
       PG_PORT: 5432
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      SMTP_PWD: ${SMTP_PWD}
 
     depends_on:
       - postgres
