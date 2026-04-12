@@ -78,7 +78,7 @@ services:
       minio:
         condition: service_healthy
       redis:
-          ondition: service_healthy
+        condition: service_healthy
 
     env_file:
       - .env
