@@ -65,7 +65,7 @@ services:
       ES_HOST: elasticsearch
 
     healthcheck:
-      test: ["CMD", "curt", "-f", "http://localhost:8000/health"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
       interval: 40s
       retries: 3
       timeout: 20s
@@ -117,7 +117,7 @@ services:
     command: server /data --console-address ":9001"
 
     healthcheck:
-      test: ["CMD", "curt", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
       interval: 10s
       retries: 5
       timeout: 5s
