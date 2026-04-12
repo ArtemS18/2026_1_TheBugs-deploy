@@ -29,8 +29,10 @@ services:
       - 80:80
       - 443:443 
     depends_on:
-      - frontend
-      - server
+      frontend:
+        condition: service_started
+      server:
+        condition: service_healthy
 
   frontend:
     build:
@@ -62,11 +64,21 @@ services:
       MINIO_PUBLICHOST: ${IMG_URL}
       ES_HOST: elasticsearch
 
+    healthcheck:
+      test: ["CMD", "curt", "-f", "http://localhost:8000/health"]
+      interval: 40s
+      retries: 3
+      timeout: 20s
+
     depends_on:
-      - postgres
-      - redis
-      - elasticsearch
-      - minio
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      redis:
+          ondition: service_healthy
 
     env_file:
       - .env
@@ -78,6 +90,11 @@ services:
     restart: unless-stopped
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   certbot:
     image: certbot/certbot:latest
@@ -98,6 +115,12 @@ services:
       MINIO_ACCESS_KEY: admin123
       MINIO_SECRET_KEY: admin123
     command: server /data --console-address ":9001"
+
+    healthcheck:
+      test: ["CMD", "curt", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
 
 
   minio-init:
@@ -148,8 +171,10 @@ services:
     volumes:
       - ./backend/deploy/logstash/pipeline:/usr/share/logstash/pipeline
     depends_on:
-      - postgres
-      - elasticsearch
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
 
 volumes:
   postgres_data:
