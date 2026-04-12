@@ -126,7 +126,8 @@ services:
   minio-init:
     image: minio/mc:latest
     depends_on:
-      - minio
+      minio:
+        condition: service_healthy
     environment:
       MINIO_ALIAS: minio
       MINIO_ENDPOINT: http://minio:9000
@@ -160,9 +161,10 @@ services:
       "
     healthcheck:
       test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health"]
-      interval: 10s
-      timeout: 5s
+      interval: 30s 
+      timeout: 30s
       retries: 5
+      start_period: 60s
 
   logstash:
     build: 
