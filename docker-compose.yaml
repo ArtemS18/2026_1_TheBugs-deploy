@@ -177,6 +177,7 @@ services:
     build: 
       context: ./backend/deploy/logstash
       dockerfile: Dockerfile
+    environment:
       LS_JAVA_OPTS: -Xms512m -Xmx1g
     volumes:
       - ./backend/deploy/logstash/pipeline:/usr/share/logstash/pipeline
