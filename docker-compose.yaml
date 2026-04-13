@@ -147,6 +147,7 @@ services:
     environment:
       discovery.type: single-node
       xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms2g -Xmx2g
     ports:
       - "9200:9200"
     volumes:
@@ -159,6 +160,12 @@ services:
         bash /usr/local/bin/init.sh &&
         wait
       "
+    deploy:
+      resources:
+        limits:
+          memory: 3G
+          cpus: '2.0'
+
     healthcheck:
       test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health"]
       interval: 30s 
@@ -170,6 +177,7 @@ services:
     build: 
       context: ./backend/deploy/logstash
       dockerfile: Dockerfile
+      LS_JAVA_OPTS: -Xms512m -Xmx1g
     volumes:
       - ./backend/deploy/logstash/pipeline:/usr/share/logstash/pipeline
     depends_on:
@@ -177,6 +185,12 @@ services:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
+
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+          cpus: '1.0'
 
 volumes:
   postgres_data:
