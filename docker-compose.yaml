@@ -52,6 +52,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+
+    volumes:
+      - ./backend/config/config.yaml:/app/config/config.yaml
+      - ./backend/private.pem:/app/private.pem
+      - ./backend/public.pem:/app/public.pem
     environment:
       APP_ENV: ${APP_ENV}
       SRV_HOST: 0.0.0.0
