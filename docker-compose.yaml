@@ -69,6 +69,7 @@ services:
       MINIO_ENDPOINT: minio:9000
       MINIO_PUBLIC_HOST: ${IMG_URL}
       ES_HOST: elasticsearch
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
 
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1"]
