@@ -35,14 +35,14 @@ jobs:
                  fi
                  '"
 
-            - name: Docker pull
-              run: |
-                ssh -o StrictHostKeyChecking=accept-new "${{secrets.VPS_USERNAME}}@${{secrets.VPS_HOST}}" "sudo bash -lc '
-                cd /home/${{ secrets.VPS_USERNAME }}/prod
-                docker compose pull
-                docker compose down
-                docker compose up -d --build --remove-orphans
-                '"
+            # - name: Docker pull
+            #   run: |
+            #     ssh -o StrictHostKeyChecking=accept-new "${{secrets.VPS_USERNAME}}@${{secrets.VPS_HOST}}" "sudo bash -lc '
+            #     cd /home/${{ secrets.VPS_USERNAME }}/prod
+            #     docker compose pull
+            #     docker compose down
+            #     docker compose up -d --build --remove-orphans
+            #     '"
     # notify_success:
     #     runs-on: ubuntu-latest
     #     needs: deploy
