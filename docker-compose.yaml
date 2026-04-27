@@ -70,6 +70,7 @@ services:
       MINIO_PUBLIC_HOST: ${IMG_URL}
       ES_HOST: elasticsearch
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      LOKI_URL: http://loki:3100
 
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1"]
@@ -108,7 +109,7 @@ services:
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
       - ./nginx/certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --email rerttdtdf@gmail.com --agree-tos -d dom-deli.ru -d grafana.dom-deli.ru
+    command: certonly --webroot -w /var/www/certbot --email rerttdtdf@gmail.com --agree-tos --expand -d dom-deli.ru -d grafana.dom-deli.ru
 
   minio: 
     image:
@@ -227,6 +228,21 @@ services:
       - ./backend/deploy/grafana/dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
+      - loki
+
+  loki:
+    image: grafana/loki:3.0.0
+    command: ["-config.file=/etc/loki/config.yml"]
+    ports:
+      - "3100:3100" 
+    volumes:
+      - ./backend/deploy/loki/loki-config.yml:/etc/loki/config.yml
+      - loki-data:/loki
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3100/ready"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
 
 volumes:
   grafana_data:
@@ -234,6 +250,7 @@ volumes:
   redis_data:
   minio_data:
   es_data:
+  loki-data:
 
 
 
