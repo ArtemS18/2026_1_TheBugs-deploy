@@ -108,7 +108,7 @@ services:
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
       - ./nginx/certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --email rerttdtdf@gmail.com --agree-tos -d dom-deli.ru
+    command: certonly --webroot -w /var/www/certbot --email rerttdtdf@gmail.com --agree-tos -d dom-deli.ru -d grafana.dom-deli.ru
 
   minio: 
     image:
@@ -207,7 +207,29 @@ services:
     depends_on:
       - postgres
 
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./backend/deploy/grafana/provisioning:/etc/grafana/provisioning
+      - ./backend/deploy/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+
 volumes:
+  grafana_data:
   postgres_data:
   redis_data:
   minio_data:
