@@ -282,12 +282,8 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       SMTP_PWD: ${SMTP_PWD}
-      MINIO_ENDPOINT: minio:9000
-      MINIO_PUBLIC_HOST: ${IMG_URL}
       ES_HOST: elasticsearch
-      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       LOKI_URL: http://loki:3100
-      AUTH_SRV_HOST: "auth_service"
       SRV_PORT: 8001
       SERVICE_NAME: auth_service
 
