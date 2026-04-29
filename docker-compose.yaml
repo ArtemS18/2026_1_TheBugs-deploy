@@ -293,6 +293,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      loki:
+        condition: service_healthy
 
   gateaway_service:
     build:
