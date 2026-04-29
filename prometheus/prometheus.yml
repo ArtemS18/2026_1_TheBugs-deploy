@@ -3,7 +3,11 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'api'
+  - job_name: 'gateaway_service'
     static_configs:
-      - targets: ['server:8000']
+      - targets: ['gateaway_service:8000']
+    metrics_path: 'metrics'
+  - job_name: 'auth_service'
+    static_configs:
+      - targets: ['auth_service:8001']
     metrics_path: 'metrics'
