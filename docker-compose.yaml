@@ -242,8 +242,8 @@ services:
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./backend/deploy/grafana/provisioning:/etc/grafana/provisioning
-      - ./backend/deploy/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./backend/deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./backend/deploy/grafana/dashboards:/var/lib/grafana/dashboards:ro
     depends_on:
       - prometheus
       - loki
@@ -282,7 +282,6 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       SMTP_PWD: ${SMTP_PWD}
-      ES_HOST: elasticsearch
       LOKI_URL: http://loki:3100
       SRV_PORT: 8001
       SERVICE_NAME: auth_service
@@ -329,6 +328,8 @@ services:
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       LOKI_URL: http://loki:3100
       AUTH_SRV_HOST: "auth_service"
+      USER_SRV_HOST: "user_service"
+      COMPLEX_SRV_HOST: "complex_service"
       SRV_PORT: 8000
       SERVICE_NAME: gateaway_service
 
@@ -340,6 +341,81 @@ services:
     depends_on:
       auth_service:
           condition: service_healthy
+      user_service:
+          condition: service_healthy
+      omplex_servic:
+          condition: service_healthy
+
+
+  user_service:
+    build:
+        context: backend
+        dockerfile: microservice/user/Dockerfile
+    ports:
+    - "8002:8002"
+
+    volumes:
+      - ./backend/config/config.yaml:/app/config/config.yaml
+    <<: *server-common
+    environment:
+      APP_ENV: ${APP_ENV}
+      SRV_HOST: 0.0.0.0
+      SRV_PORT: 8002
+      PG_HOST: postgres
+      PG_PORT: 5432
+      MINIO_ENDPOINT: minio:9000
+      MINIO_PUBLIC_HOST: ${IMG_URL}
+      LOKI_URL: http://loki:3100
+      SERVICE_NAME: user_service
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8002/health || exit 1"]
+      interval: 10s
+      retries: 3
+      timeout: 10s
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      loki:
+        condition: service_healthy
+
+  complex_service:
+    build:
+        context: backend
+        dockerfile: microservice/complex/Dockerfile
+    ports:
+    - "8003:8003"
+
+    volumes:
+      - ./backend/config/config.yaml:/app/config/config.yaml
+    <<: *server-common
+    environment:
+      APP_ENV: ${APP_ENV}
+      SRV_HOST: 0.0.0.0
+      SRV_PORT: 8003
+      PG_HOST: postgres
+      PG_PORT: 5432
+      MINIO_ENDPOINT: minio:9000
+      MINIO_PUBLIC_HOST: ${IMG_URL}
+      LOKI_URL: http://loki:3100
+      SERVICE_NAME: complex_service
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8003/health || exit 1"]
+      interval: 10s
+      retries: 3
+      timeout: 10s
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      loki:
+        condition: service_healthy
 
 volumes:
   grafana_data:
