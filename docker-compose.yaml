@@ -52,6 +52,8 @@ services:
         condition: service_started
       gateaway_service:
         condition: service_healthy
+      frontend-support:
+        condition: service_started
 
   frontend:
     build:
