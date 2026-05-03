@@ -140,7 +140,7 @@ services:
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
       - ./nginx/certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --email rerttdtdf@gmail.com --agree-tos --expand -d dom-deli.ru -d grafana.dom-deli.ru -d support.dom-deli.ru;
+    command: certonly --webroot -w /var/www/certbot --email rerttdtdf@gmail.com --agree-tos --expand -d dom-deli.ru -d grafana.dom-deli.ru -d support.dom-deli.ru -d elasticvue.dom-deli.ru;
 
   minio: 
     image:
