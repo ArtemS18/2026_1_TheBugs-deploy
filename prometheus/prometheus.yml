@@ -22,3 +22,8 @@ scrape_configs:
     static_configs:
       - targets: ['complex_service:8003']
     metrics_path: 'metrics'
+
+  - job_name: 'poster_service'
+    static_configs:
+      - targets: ['poster_service:8004']
+    metrics_path: 'metrics'

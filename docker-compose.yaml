@@ -341,6 +341,7 @@ services:
       AUTH_SRV_HOST: "auth_service"
       USER_SRV_HOST: "user_service"
       COMPLEX_SRV_HOST: "complex_service"
+      POSTER_SRV_HOST: "poster_service"
       SRV_PORT: 8000
       SERVICE_NAME: gateaway_service
 
@@ -355,6 +356,8 @@ services:
       user_service:
           condition: service_healthy
       complex_service:
+          condition: service_healthy
+      poster_service:
           condition: service_healthy
 
 
@@ -426,6 +429,45 @@ services:
       minio:
         condition: service_healthy
       loki:
+        condition: service_healthy
+    
+  poster_service:
+    build:
+        context: backend
+        dockerfile: microservice/poster/Dockerfile
+    ports:
+    - "8004:8004"
+
+    volumes:
+      - ./backend/config/config.yaml:/app/config/config.yaml
+    <<: *server-common
+    environment:
+      APP_ENV: ${APP_ENV}
+      SRV_HOST: 0.0.0.0
+      SRV_PORT: 8004
+      PG_HOST: postgres
+      PG_PORT: 5432
+      MINIO_ENDPOINT: minio:9000
+      MINIO_PUBLIC_HOST: ${IMG_URL}
+      LOKI_URL: http://loki:3100
+      SERVICE_NAME: poster_service
+      ES_HOST: elasticsearch
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8004/health || exit 1"]
+      interval: 10s
+      retries: 3
+      timeout: 10s
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      loki:
+        condition: service_healthy
+      elasticsearch:
         condition: service_healthy
 
 volumes:
