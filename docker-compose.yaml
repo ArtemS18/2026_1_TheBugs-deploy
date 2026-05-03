@@ -60,8 +60,19 @@ services:
       args:
         VITE_API_URL: ${API_URL}
         VITE_BASE_URL: ${BASE_URL}
+        VITE_SUPPORT_URL: ${SUPPORT_URL}
     volumes:
       - ./nginx/share:/app/dist
+
+  frontend-support:
+    build:
+      context: ./frontend
+      dockerfile: support/Dockerfile
+      args:
+        VITE_API_URL: ${API_URL}
+        VITE_BASE_URL: ${BASE_URL}
+    ports:
+      - "81:80"
     
     
   # server:
@@ -127,7 +138,7 @@ services:
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
       - ./nginx/certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --email rerttdtdf@gmail.com --agree-tos --expand -d dom-deli.ru -d grafana.dom-deli.ru
+    command: certonly --webroot -w /var/www/certbot --email rerttdtdf@gmail.com --agree-tos --expand -d dom-deli.ru -d grafana.dom-deli.ru -d support.dom-deli.ru;
 
   minio: 
     image:
@@ -343,7 +354,7 @@ services:
           condition: service_healthy
       user_service:
           condition: service_healthy
-      omplex_servic:
+      complex_service:
           condition: service_healthy
 
 
