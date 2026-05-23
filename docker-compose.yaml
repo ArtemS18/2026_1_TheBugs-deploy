@@ -239,6 +239,20 @@ services:
       interval: 10s
       timeout: 3s
       retries: 10
+
+  promotion_worker:
+    build:
+      context: backend
+      dockerfile: microservice/cron/worker/Dockerfile
+    volumes:
+      - ./backend/config/config.yaml:/app/config/config.yaml
+    <<: *server-common
+    environment:
+      APP_ENV: ${APP_ENV}
+      PG_HOST: postgres
+      PG_PORT: 5432
+
+  
   
   auth_service:
     build:
