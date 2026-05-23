@@ -311,6 +311,7 @@ services:
       POSTER_SRV_HOST: "poster_service"
       SRV_PORT: 8000
       SERVICE_NAME: gateaway_service
+      YOOKASSA_SECRET_KEY: ${YOOKASSA_SECRET_KEY}
       YOOKASSA_REDIRECT_URL: https://dom-deli.ru/promotions/waiting
 
     healthcheck:
