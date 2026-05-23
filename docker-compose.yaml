@@ -360,6 +360,7 @@ services:
       SRV_PORT: 8002
       PG_HOST: postgres
       PG_PORT: 5432
+      SMTP_PWD: ${SMTP_PWD}
       MINIO_ENDPOINT: minio:9000
       MINIO_PUBLIC_HOST: ${IMG_URL}
       LOKI_URL: http://loki:3100
@@ -427,7 +428,10 @@ services:
     environment:
       APP_ENV: ${APP_ENV}
       SRV_HOST: 0.0.0.0
+      SMTP_PWD: ${SMTP_PWD}
       SRV_PORT: 8004
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
       PG_HOST: postgres
       PG_PORT: 5432
       MINIO_ENDPOINT: minio:9000
