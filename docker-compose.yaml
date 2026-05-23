@@ -76,52 +76,6 @@ services:
     ports:
       - "81:80"
     
-    
-  # server:
-  #   container_name: server
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8000:8000"
-
-  #   volumes:
-  #     - ./backend/config/config.yaml:/app/config/config.yaml
-  #     - ./backend/private.pem:/app/private.pem
-  #     - ./backend/public.pem:/app/public.pem
-  #   environment:
-  #     APP_ENV: ${APP_ENV}
-  #     SRV_HOST: 0.0.0.0
-  #     PG_HOST: postgres
-  #     PG_PORT: 5432
-  #     REDIS_HOST: redis
-  #     REDIS_PORT: 6379
-  #     SMTP_PWD: ${SMTP_PWD}
-  #     MINIO_ENDPOINT: minio:9000
-  #     MINIO_PUBLIC_HOST: ${IMG_URL}
-  #     ES_HOST: elasticsearch
-  #     OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
-  #     LOKI_URL: http://loki:3100
-
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1"]
-  #     interval: 10s
-  #     retries: 3
-  #     timeout: 10s
-
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     elasticsearch:
-  #       condition: service_healthy
-  #     minio:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-
-  #   env_file:
-  #     - .env
-
   redis:
     image: redis:7-alpine
     ports:
@@ -357,6 +311,7 @@ services:
       POSTER_SRV_HOST: "poster_service"
       SRV_PORT: 8000
       SERVICE_NAME: gateaway_service
+      YOOKASSA_REDIRECT_URL: https://dom-deli.ru/promotions/waiting
 
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1"]
